@@ -102,7 +102,7 @@ Now run the `names()` function on the `cov_jabar_raw` to find out the main eleme
 
 ### West Java COVID-19 Progress
 
-The historical data on the progress of COVID-19 is stored under the name `list_perkembangan`. Data from `cov_jabar_raw` are extracted and the result are saved as an object named `cov_jabar`. After that, we can observe the `cov_jabar` structure using the `str()` and `head()` functions
+The historical data on the progress of COVID-19 is stored under the name `list_perkembangan`. Data from `cov_jabar_raw` are extracted and the results are saved as an object named `cov_jabar`. After that, we can observe the `cov_jabar` structure using the `str()` and `head()` functions
 
 ```
 cov_jabar <- cov_jabar_raw$list_perkembangan
@@ -153,11 +153,96 @@ library(ggplot2)
 library(hrbrthemes)
 ```
 
-Data visualization for this dataset is using **ggplot2** and **hrbrthemes** library, with `tanggal` and `kasus_baru` as the variable to see the progress of the increase in COVID-19 cases through graphic visualization.
+Data visualization for this dataset is using **ggplot2** and **hrbrthemes** package, with `tanggal` and `kasus_baru` as the variable to see the progress of the  COVID-19 cases through graphic visualization.
+
+### Daily Positive Cases of COVID-19 in West Java
 
 ```
-ggplot(data = new_cov_jabar, aes(x = tanggal, y = kasus_baru)) +
-  geom_col()
+ggplot(new_cov_jabar, aes(tanggal, kasus_baru)) +
+	geom_col(fill = "salmon") +
+labs(
+	x = NULL,
+	y = "Jumlah kasus",
+	title = "Kasus Harian Positif COVID-19 di Jawa Barat",
+	subtitle = "Terjadi pelonjakan kasus di awal bulan Juli akibat klaster Secapa AD Bandung",
+	caption = "Sumber data: covid19.go.id"
+) +
+theme_ipsum(
+	base_size = 13,
+	plot_title_size = 21,
+	grid = "Y",
+	ticks = TRUE
+) +
+theme(plot.title.position = "plot")
 ```
-![image](https://user-images.githubusercontent.com/104981673/196190012-ef455952-dbc8-482e-9d37-1f1be36f1c35.png)
 
+![image](https://user-images.githubusercontent.com/104981673/196191498-81a2fa2a-1652-4d9f-9d66-267d46daf187.png)
+
+
+### Daily Recovery Cases of COVID-19 in West Java
+
+```
+ggplot(new_cov_jabar, aes(tanggal, sembuh)) +
+  geom_col(fill = "olivedrab2") +
+  labs(
+    x = NULL,
+    y = "Jumlah kasus",
+    title = "Kasus Harian Sembuh Dari COVID-19 di Jawa Barat",
+    caption = "Sumber data: covid.19.go.id"
+  ) +
+  theme_ipsum(
+    base_size = 13, 
+    plot_title_size = 21,
+    grid = "Y",
+    ticks = TRUE
+  ) +
+  theme(plot.title.position = "plot")
+ ```
+
+![image](https://user-images.githubusercontent.com/104981673/196193531-c457578d-81df-4774-a946-42b53741c8cd.png)
+
+
+### Daily Deaths Cases of COVID-19 in West Java
+
+```
+ggplot(new_cov_jabar, aes(tanggal, meninggal)) +
+  geom_col(fill ="darkslategray4") +
+  labs(
+    x = NULL,
+    y = "Jumlah kasus",
+    title = "Kasus Harian Meninggal Akibat COVID-19 di Jawa Barat",
+    caption = "Sumber data: covid19.go.id"
+  ) +
+  theme_ipsum(
+    base_size = 13, 
+    plot_title_size = 21,
+    grid = "Y",
+    ticks = TRUE
+  ) +
+  theme(plot.title.position = "plot")
+```
+   
+![image](https://user-images.githubusercontent.com/104981673/196193807-d1148ff1-dedb-4889-9179-ed3fda5096f9.png)
+ 
+
+The graphs shows there is a daily fluctuation in the increase in cases. Based on this you then want to try to observe how are the progresses in a span of weeks. How to do it?
+
+The `week()` function from **lubridate** package will be used to extract week information in a year as week.
+
+```
+library(lubridate)
+```
+
+New object will be saved as `cov_jabar_pekanan`. To perform data inspections,  `glimpse()` function of **dplyr** is used.
+
+```
+cov_jabar_pekanan <- new_cov_jabar %>% 
+  count(
+    tahun = year(tanggal),
+    pekan_ke = week(tanggal),
+    wt = kasus_baru,
+    name = "jumlah"
+  )
+
+glimpse(cov_jabar_pekanan)
+```
