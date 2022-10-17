@@ -14,19 +14,18 @@ status_code(resp)
 ```
 
 `status_code` shows **200**, means importing dataset request has been successfully fulfilled. Use  `headers()` to see the metadata, including last update date
+
 ```
 headers(resp)
-
 ```
 
 Then extract the data as `cov_id_raw`.
-
 
 ```
 cov_id_raw <- content(resp, as = "parsed", simplifyVector = TRUE) 
 
 ```
-</p>
+
 
 ## Exploration Data Analysis
 
@@ -64,16 +63,12 @@ cov_id_update$total$jumlah_meninggal
 
 1. When is the latest update date for new case data? 
    **May 14th 2022**
-
 2. How many new recovered cases?
    **416 cases**
-   
 3. What is the number of additional deaths cases?
    **5 cases**
-   
 4. What is the latest total number of positive cases?
    **6.050.519 cases**
-   
 5. What is the latest total number of deaths?
    **156.453**
 
@@ -246,3 +241,91 @@ cov_jabar_pekanan <- new_cov_jabar %>%
 
 glimpse(cov_jabar_pekanan)
 ```
+
+<img width="442" alt="image" src="https://user-images.githubusercontent.com/104981673/196197032-f2a93dcc-3f91-46c4-add4-cfcf8f739681.png">
+
+
+### Is this week better than last week?
+
+Here are the steps to answer the question:
+
+1. Create a new column containing the number of new cases in the previous week. This column is named `jumlah_pekanlalu`
+2. Replace the value of `NA` in the column `jumlah_pekanlalu` with a value of 0
+3. Do a comparison between the column `jumlah` with the column `jumlah_pekanlalu`. The results of this comparison are stored in a new column as `lebih_baik`. The result will be `TRUE` if the number of new cases this week is **lower** than the number of cases last week
+4. The `lag()` function of **dplyr** is used to create the column `jumlah_pekanlalu`. Note that here the function is written as `dplyr::lag()` to avoid conflicts with the `lag()` function from the **stats** package. 
+5. Inspect the data using the `glimpse()` function
+
+
+```
+cov_jabar_pekanan <-
+  cov_jabar_pekanan %>% 
+  mutate(
+    jumlah_pekanlalu = dplyr::lag(jumlah, 1),
+    jumlah_pekanlalu = ifelse(is.na(jumlah_pekanlalu), 0, jumlah_pekanlalu),
+    lebih_baik = jumlah < jumlah_pekanlalu
+  )
+glimpse(cov_jabar_pekanan)
+```
+
+<img width="443" alt="image" src="https://user-images.githubusercontent.com/104981673/196200847-87e894d3-68d4-45c2-a61d-791eec019cb6.png">
+
+```
+ggplot(cov_jabar_pekanan[cov_jabar_pekanan$tahun==2020,], aes(pekan_ke, jumlah, fill = lebih_baik)) +
+geom_col(show.legend = FALSE) +
+scale_x_continuous(breaks = 9:29, expand = c(0, 0)) +
+scale_fill_manual(values = c("TRUE" = "seagreen3", "FALSE" = "salmon")) +
+labs(
+x = NULL,
+y = "Jumlah kasus",
+title = "Kasus Pekanan Positif COVID-19 di Jawa Barat",
+subtitle = "Kolom hijau menunjukan penambahan kasus baru lebih sedikit dibandingkan satu pekan sebelumnya",
+caption = "Sumber data: covid.19.go.id"
+) +
+theme_ipsum(base_size = 13, plot_title_size = 21, grid = "Y", ticks = TRUE) +
+theme(plot.title.position = "plot")
+```
+
+![image](https://user-images.githubusercontent.com/104981673/196202429-a81a2432-9f7e-4921-9b8c-a29fc771a566.png)
+
+
+```
+cov_jabar_akumulasi <- 
+  new_cov_jabar %>% 
+  transmute(
+    tanggal,
+    akumulasi_aktif = cumsum(kasus_baru) - cumsum(sembuh) - cumsum(meninggal),
+    akumulasi_sembuh = cumsum(sembuh),
+    akumulasi_meninggal = cumsum(meninggal)
+  )
+
+tail(cov_jabar_akumulasi)
+```
+
+<img width="402" alt="image" src="https://user-images.githubusercontent.com/104981673/196202987-210afbc4-4f7e-48fd-8df1-afcc35e38b1c.png">
+
+```
+ggplot(data = cov_jabar_akumulasi, aes(x = tanggal, y = akumulasi_aktif)) +
+  geom_line()
+```
+
+![image](https://user-images.githubusercontent.com/104981673/196203266-810ef34e-7b37-46e6-940d-831559d68741.png)
+
+
+## Data Transformation
+
+The data will be changed from the original wide format to long format, using **tidyr** package. The result of the data transformation will be saved as `cov_jabar_akumulasi_pivot`! 
+
+Inspect the amount of rows and columns using `dim()` function.
+
+**Before**
+
+<img width="169" alt="image" src="https://user-images.githubusercontent.com/104981673/196204534-3de31270-82cf-44db-9abd-097ddcd364d8.png">
+
+the data has 785 rows and 4 columns
+
+**After**
+
+<img width="185" alt="image" src="https://user-images.githubusercontent.com/104981673/196204847-6f58cf69-ac1e-4b86-b0a4-0736b28e85c9.png">
+
+
+the data has 2355 rows and 3 columns
