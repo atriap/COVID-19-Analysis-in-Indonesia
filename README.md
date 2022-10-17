@@ -112,11 +112,21 @@ head(cov_jabar)
 
 ## Data Wrangling
 
-After extracting and observing cov_jabar, you found some irregularities in the data. Among them are data irregularities in the date column and inconsistent column writing formats. Now you will try to do some steps to tame the data
+After extracting and observing `cov_jabar`, there are some irregularities in the data such as date column and inconsistent column writing formats. The following steps are done to make the data easier to understand, using **dplyr** library.
 
 ```
 library(dplyr)
 ```
+
+1. Removing the `DIRAWAT_OR_ISOLASI` and `AKUMULASI_DIRAWAT_OR_ISOLASI` columns
+2. Delete all columns that contain cumulative values
+3. Rename the column `KASUS` to `kasus_baru`
+4. Change the writing format of the `MENINGGAL` and `SEMBUH` columns to lowercase
+5. Correct the data in the date column
+
+
+Use the pipe operator (%>%) to string the functions into a pipeline. Save the result with the name `new_cov_jabar`.
+
 
 ```
 new_cov_jabar <-
