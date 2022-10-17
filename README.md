@@ -348,7 +348,7 @@ x = NULL,
 y = "Jumlah kasus akumulasi",
 colour = NULL,
 title = "Dinamika Kasus COVID-19 di Jawa Barat",
-caption = "Sumber data: covid.19.go.id") +
+caption = "Sumber data: covid19.go.id") +
 theme_ipsum(
 base_size = 13,
 plot_title_size = 21,
@@ -359,7 +359,7 @@ plot.title = element_text(hjust = 0.5),
 legend.position = "top")
 ```
 
-![image](https://user-images.githubusercontent.com/104981673/196211635-652bd41b-0280-4793-b56a-462993a01a5c.png)
+![image](https://user-images.githubusercontent.com/104981673/196212263-87b030ec-9dcf-4ec8-9402-ab0a4d23d21c.png)
 
 
 **Observations**
