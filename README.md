@@ -144,3 +144,20 @@ new_cov_jabar <-
   )
 str(new_cov_jabar)  
 ```
+
+## Data Visualization
+
+
+```
+library(ggplot2)
+library(hrbrthemes)
+```
+
+Data visualization for this dataset is using **ggplot2** and **hrbrthemes** library, with `tanggal` and `kasus_baru` as the variable to see the progress of the increase in COVID-19 cases through graphic visualization.
+
+```
+ggplot(data = new_cov_jabar, aes(x = tanggal, y = kasus_baru)) +
+  geom_col()
+```
+![image](https://user-images.githubusercontent.com/104981673/196190012-ef455952-dbc8-482e-9d37-1f1be36f1c35.png)
+
