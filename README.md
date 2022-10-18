@@ -331,18 +331,16 @@ Inspect the amount of rows and columns using `dim()` function.
 
 the data has 785 rows and 4 columns
 
+```{r}
+cov_jabar_akumulasi_pivot <-
+  cov_jabar_akumulasi %>%
+  pivot_longer( 
+    cols = -tanggal,
+    names_to = "kategori",
+    names_prefix = "akumulasi_",
+    values_to = "jumlah"
+)
 ```
-cov_jabar_akumulasi_pivot <- 
-  cov_jabar_akumulasi %>% 
-  gather(
-    key = "kategori",
-    value = "jumlah",
-    -tanggal
-  ) %>% 
-  mutate(
-    kategori = sub(pattern = "akumulasi_", replacement = "", kategori)
-  )
-  ```
 
 
 **After**
