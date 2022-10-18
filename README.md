@@ -83,6 +83,7 @@ What if you want to focus on COVID-19 data in your current province of residence
 [covid19.go.id](https://www.covid19.go.id) provides provincial-level COVID-19 case data at different API addresses. For example, data regarding COVID-19 West Java, where I currently live, is available at https://storage.googleapis.com/dqlab-dataset/prov_detail_JAWA_BARAT.json and can be accessed using the following line of code:
 
 ```
+set_config(config(ssl_verifypeer = 0L))
 resp_jabar <- GET("https://storage.googleapis.com/dqlab-dataset/prov_detail_JAVA_WEST.json")
 cov_jabar_raw <- content(resp_jabar, as = "parsed", simplifyVector = TRUE)
 ```
