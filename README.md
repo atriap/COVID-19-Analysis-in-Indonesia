@@ -89,6 +89,13 @@ cov_jabar_raw <- content(resp_jabar, as = "parsed", simplifyVector = TRUE)
 
 Now run the `names()` function on the `cov_jabar_raw` to find out the main element names available and answer the following questions:
 
+```
+names(cov_jabar_raw)
+cov_jabar_raw$kasus_total
+cov_jabar_raw$meninggal_persen
+cov_jabar_raw$sembuh_persen
+```
+
 1. What is the total number of COVID-19 cases in West Java? **1.105.134 cases**
 2. What is the percentage of deaths from COVID-19 in West Java? **1.425619%**
 3. What is the percentage of recovery rate from COVID-19 in West Java? **98.28238%**
