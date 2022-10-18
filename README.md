@@ -313,7 +313,7 @@ ggplot(data = cov_jabar_akumulasi, aes(x = tanggal, y = akumulasi_aktif)) +
 
 ## Data Transformation
 
-The data will be changed from the original wide format to long format, using **tidyr** package. The result of the data transformation will be saved as `cov_jabar_akumulasi_pivot`! 
+The data will be changed from the original wide format to long format, using **tidyr** package. The result of the data transformation will be saved as `cov_jabar_akumulasi_pivot`
 
 Inspect the amount of rows and columns using `dim()` function.
 
@@ -322,6 +322,20 @@ Inspect the amount of rows and columns using `dim()` function.
 <img width="169" alt="image" src="https://user-images.githubusercontent.com/104981673/196204534-3de31270-82cf-44db-9abd-097ddcd364d8.png">
 
 the data has 785 rows and 4 columns
+
+```
+cov_jabar_akumulasi_pivot <- 
+  cov_jabar_akumulasi %>% 
+  gather(
+    key = "kategori",
+    value = "jumlah",
+    -tanggal
+  ) %>% 
+  mutate(
+    kategori = sub(pattern = "akumulasi_", replacement = "", kategori)
+  )
+  ```
+
 
 **After**
 
@@ -364,13 +378,13 @@ legend.position = "top")
 
 **Observations**
 
-1.
-2.
-3.
+1. Accumulation of recovery cases increased more rapidly than death cases and the active cases, with an increasing trend from 2020 to 2022
+2. The trend for the accumulation of deaths cases is stagnant
+3. Accumulation of active cases increased in July 2021 and at least at the end of 2021 before finally spiking in early 2022
 
 
 # Conclusions
 
-1.
-2.
-3.
+1. Daily positive COVID-19 cases in West Java increased dramatically in early July 2021 and early 2022, reaching more than 15.000 new cases per day
+2. The same trend pattern also occurs in daily recovered cases, where in early 2022 the daily number of recovered cases is more than 20.000 cases
+3. Meanwhile, daily cases of death due to COVID-19 in West Java only jumped in July 2021, reaching more than 300 people per day, while in the spike in cases in early 2022, the daily death rate was below 100 people.
