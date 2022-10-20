@@ -27,7 +27,7 @@ cov_id_raw <- content(resp, as = "parsed", simplifyVector = TRUE)
 ```
 
 
-## Exploration Data Analysis
+## Exploratory Data Analysis
 
 The functions `length()` and `names()` are used to observe how many components there are and what are the names of the components in the `cov_id_raw` object. Then extract another component with `update` column only and save it with the name `cov_id_update`.
 
